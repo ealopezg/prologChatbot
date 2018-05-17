@@ -28,7 +28,7 @@ Instalar SWI-PROLOG
 
 ##### Forma facil
 
-Descargar e instalar la aplicacion [SWI-Prolog:macOS](http://www.swi-prolog.org/build/macos.html)
+Descargar e instalar la aplicacion [SWI-Prolog:macOS](http://www.swi-prolog.org/download/stable/bin/SWI-Prolog-7.6.4.dmg)
 
 ##### Forma no tan facil
 Instalar [Homebrew](https://brew.sh/index_es), utilizando la terminal
@@ -42,29 +42,53 @@ Luego instalar SWI-Prolog
 brew install swi-prolog
 ```
 
+#### Ubuntu
 
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
+Clonar el repositorio
 
 ```
-Give an example
+git clone http://github.com/ealopezg/prologChatbot
 ```
 
-### And coding style tests
-
-Explain what these tests test and why
+Instalar SWI-Prolog
 
 ```
-Give an example
+sudo apt-get install swi-prolog
+```
+
+#### Windows
+
+Descargar e instalar SWI-Prolog\n
+[64bits](http://www.swi-prolog.org/download/stable/bin/swipl-w64-764.exe)
+[32bits](http://www.swi-prolog.org/download/stable/bin/swipl-w32-764.exe)
+
+## Ejecutando el programa
+
+Iniciando SWI-Prolog
+
+### Ubuntu o macOS si es que instaló utilizando la forma "no tan facil"
+
+Abrir la terminal y escribir
+```
+swipl
+```
+Es recomendable dirigirse a la carpeta donde está ubicado el archivo 'chatbot.pl' utilizando el comando cd.
+
+### Windows y macOS si instaló de la forma "facil"
+
+Iniciar el programa, usualmente se encuentra un icono en el escritorio en el caso de Windows y el icono en el Launchpad/Carpeta de aplicaciones en el caso de macOS
+
+
+## Iniciando el chatbot
+
+En el prompt de swi-prolog ejecutar lo siguiente, suponiendo que existe el archivo chatbot.pl
+
+```
+?- consult("C:\Users\Usuario\Desktop\chatbot.pl")
 ```
 
 
-## Built With
+## Hecho en
 
 * [SWI-Prolog](http://www.swi-prolog.org) 
 
