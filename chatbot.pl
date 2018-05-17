@@ -88,8 +88,19 @@ genNewID(ID,NewID):-
 NewID is ID+1.
 
 
-lastMsgFrom(Usuario,[[H|T],_],Mensaje):-
-split_string([])
+
+msgFrom(Msg,Usr,Str):-
+split_string(Str," ","",[_,_,_,_,N|MsgL]),
+split_string(N,":","",[Usr,_]),
+atom(Msg),
+split_string(Msg," ","",MsgL).
+
+
+lastMsgFrom(Usr,[[H|_],_],Msg):-
+msgFrom(Msg,Usr,H).
+lastMsgFrom(Usuario,[[_|T],_],Msg):-
+lastMsgFrom(Usuario,[T,_],Msg).
+
 
 
 
@@ -98,22 +109,20 @@ split_string([])
 
 
 beginDialog(Chatbot,InputLog,Seed,OutputLog):-
-append([],InputLog,[Mensajes,Info]),
 fechaString(F),
 getLastID(InputLog,LastID),
 genNewID(LastID,ID),
 atom_number(IDs,ID),
 string_concat("ID:",IDs,IDss),
 list_string(["BeginDialog",F,IDss],S),
-append(Mensajes,[S],Mensajes1),
-append([],[Mensajes1,Info],OutputLog).
+writeMessage(S,InputLog,OutputLog).
 
 
 recomendarPelicula(GENERO,P):-
 lista_de_peliculas_genero(GENERO,L),
 mejorPelicula(L,P).
 
-possibleResponses(Msg,Chatbot,InputLog,Responses):-
+%possibleResponses(Msg,Chatbot,InputLog,Responses):-
 
 
 
