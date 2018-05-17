@@ -12,7 +12,7 @@ Tener instalado [SWI-Prolog](http://www.swi-prolog.org)
 Sistema Operativo: Microsoft Windows, macOS o alguna distribucion de GNU/Linux
 
 
-### Instación 
+### Instalación 
 
 A continuación se detallan las instrucciones de instalación para los sistemas Windows, macOS, y Ubuntu
 
@@ -58,8 +58,10 @@ sudo apt-get install swi-prolog
 
 #### Windows
 
-Descargar e instalar SWI-Prolog\n
+Descargar e instalar SWI-Prolog
+
 [64bits](http://www.swi-prolog.org/download/stable/bin/swipl-w64-764.exe)
+
 [32bits](http://www.swi-prolog.org/download/stable/bin/swipl-w32-764.exe)
 
 ## Ejecutando el programa
