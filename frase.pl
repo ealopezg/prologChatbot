@@ -11,6 +11,7 @@ parte3("me gustaria ayudarte ").
 parte3("quiero servir de algo :(").
 
 
+
 frase(F,Personalidad):-
 parte1(A),
 parte2(Personalidad,B),

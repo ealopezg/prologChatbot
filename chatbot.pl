@@ -17,6 +17,9 @@ pelicula("Yo Soy Simón","ROMANCE",8.1).
 
 
 
+
+
+
 fecha(Y,Ms,D,H,M,S):-
 get_time(T),
 T1 is T-14400, 
@@ -85,6 +88,12 @@ genNewID(ID,NewID):-
 NewID is ID+1.
 
 
+lastMsgFrom(Usuario,[[H|T],_],Mensaje):-
+split_string([])
+
+
+
+
 
 
 
@@ -100,14 +109,11 @@ append(Mensajes,[S],Mensajes1),
 append([],[Mensajes1,Info],OutputLog).
 
 
-
-
-
-
 recomendarPelicula(GENERO,P):-
 lista_de_peliculas_genero(GENERO,L),
 mejorPelicula(L,P).
 
+possibleResponses(Msg,Chatbot,InputLog,Responses):-
 
 
 
