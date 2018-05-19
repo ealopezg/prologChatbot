@@ -1,18 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: cp1252 -*-
-def generarHechos(personalidad,listaPreguntas):
+def generarHechos(lista):
 	listaHechos=[]
+	personalidad=lista[0]
+	listaPreguntas=lista[1]
+	largoPreguntas=len(listaPreguntas)
 	i=0
-	for pregunta in listaPreguntas:
-		print(pregunta)
-		print("Respuesta 1:")
-		respuesta1=raw_input()
-		respuesta1="mensaje("+personalidad+","+str(i)+',"'+respuesta1+'").\n'
-		print("Respuesta 2:")
-		respuesta2=raw_input()
-		respuesta2="mensaje("+personalidad+","+str(i)+',"'+respuesta2 +'").\n'
-		listaHechos.append(respuesta1)
-		listaHechos.append(respuesta2)
+	j=0
+	while (i<largoPreguntas):
+		largoSubListaPreguntas=len(listaPreguntas[i])
+		sublistaHechos=[]
+		j=0
+		while (j<largoSubListaPreguntas):
+			print "Forma",i," Pregunta:",j," | ",listaPreguntas[i][j]
+			respuesta=raw_input()
+			respuesta=formatHecho(respuesta,personalidad,i,j)
+			listaHechos.append(respuesta)
+			j=j+1
 		i=i+1
 	return listaHechos
 
@@ -24,8 +28,47 @@ def escribirHechos(listaHechos):
 	archivo.close()
 	return True
 
-listaPreguntas=["Bienvenida","recomiendame una pelicula","ACCION","Adios"]
-personalidad="formal"
-listaHechos=generarHechos(personalidad,listaPreguntas)
+
+def formatHecho(Str,perso,i,j):
+	Str="mensaje("+perso+","+str(i)+","+str(j)+',"'+Str+'").\n'
+	return Str
+
+
+
+def generarPreguntas(personalidad):
+	listaPreguntas=[]
+	pregunta = ""
+	i=0
+	j=0
+	while (pregunta!="@@"):
+		pregunta=""
+		subLista=[]
+		j=0
+		if (j==0):
+			while not pregunta in ["@","@@"]:
+				print "Forma: ",i,"Pregunta: ",j
+				pregunta=raw_input()
+				if not pregunta in ["@","@@"]:
+					subLista.append(pregunta)
+					j=j+1
+
+
+			print(subLista)
+			if (subLista!=[]):
+				listaPreguntas.append(subLista)
+				i=i+1
+			j=0
+	return [personalidad,listaPreguntas]
+
+
+listaPreguntas=generarPreguntas("formal")
+
+listaHechos=generarHechos(listaPreguntas)
+
+archivo=open("listaPreguntas.txt","a")
+archivo.write(str(listaPreguntas))
+archivo.close()
+
+
 
 escribirHechos(listaHechos)
