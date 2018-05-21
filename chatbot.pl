@@ -1,5 +1,17 @@
+/*
+PARADIGMAS DE PROGRAMACION
+
+CHATBOT HECHO EN PROLOG
+Esteban Andrés López Garrido
+
+Rut: 19837971-9
+Seccion C-3
+
+Profesor: Daniel Gacitua
+*/
+
 pelicula("Avengers: Infinity war","ACCION",8.9).
-pelicula("Deadpool 2","ACCION",8.2).
+pelicula("Deadpool2","ACCION",8.2).
 pelicula("Desobediencia","DRAMA",6.7).
 pelicula("Gnomos Al Ataque","INFANTIL",5.5).
 pelicula("Isla de Perros","ANIMACION",7.6).
@@ -27,9 +39,6 @@ horarioP("Tully",[["13:10","15:50","18:30","21:00"],["13:10","15:50","18:30","21
 horarioP("Yo Soy Simon",[["17:20","19:10"],["12:50","19:10"],["12:50","19:10"],["17:20","19:10"],["12:50","19:10"],["12:50","19:10"],["17:20","19:10"]]).
 
 
-
-
-
 mensaje(formal,0,0,"Hola, en qué lo puedo ayudar?").
 mensaje(formal,0,0,"Buenos dias, en que lo puedo ayudar?").
 mensaje(formal,0,0,"Hola, que agradable día, en qué lo puedo ayudar?").
@@ -37,21 +46,11 @@ mensaje(formal,0,1,"Buenas tardes, ¿Qué necesita?").
 mensaje(formal,0,1,"Buenas tardes, ¿Qué puedo hacer por usted?").
 mensaje(formal,0,2,"Buenas noches, ¿Qué necesita?").
 mensaje(formal,0,2,"Que linda que está la luna....¿En qué lo puedo ayudar?").
-
-
-
 mensaje(formal,1,0,"Digame algun genero que le guste").
 mensaje(formal,1,1,"Le recomiendo la película: {} , tiene una puntuación de {},Hasta Luego !!!").
-
 mensaje(formal,2,0,"Para que día").
 mensaje(formal,2,1,"¿Qué pelicula desea ver?").
 mensaje(formal,2,2,"Para el día {}, tenemos los siguientes horarios {},Hasta luego !!!").
-
-
-
-
-
-
 mensaje(formal,3,0,"¿Para qué película?").
 mensaje(formal,3,1,"Qué día tiene pensado ir a verla?").
 mensaje(formal,3,2,"Bueno, para el dia {} tenemos los siguientes horarios {},¿Que horario escoge?").
@@ -60,6 +59,7 @@ mensaje(formal,3,3,"Ok, su entrada está reservada para el dia {} a las {},Adios
 
 dia("LUNES").
 dia("MARTES").
+dia("MIERCOLES").
 dia("JUEVES").
 dia("VIERNES").
 dia("SABADO").
@@ -78,8 +78,7 @@ keyword("NO",1,2).
 keyword(KW,1,3):-
 dia(KW).
 
-keyword(KW,2,2):-
-dia(KW).
+
 
 keyword(KW,1,4):-
 horario(KW).
@@ -89,14 +88,12 @@ keyword(KW,2,1):-
 dia(KW).
 keyword(KW,2,2):-
 	pelicula(Pelicula,_,_),
-	string_upper(Pelicula,KW),!.
-
-
+	string_upper(Pelicula,KW).
 
 keyword("COMPRAR",3,0).
 keyword(KW,3,1):-
 	pelicula(Pelicula,_,_),
-	string_upper(Pelicula,KW),!.
+	string_upper(Pelicula,KW).
 keyword(KW,3,2):-
 	dia(KW).
 
@@ -104,35 +101,25 @@ keyword(KW,3,3):-
 horario(KW).
 
 
-
-
-
-
-
-
-
-
-
-
-
+user1(["Muestrame los horarios","Lunes","sexy por accidente "]).
+user2(["Recomiendame una pelicula","accion"]).
+user3(["comprar una entrada","Desobediencia","Miercoles","18:20"]).
 
 /*
-substring()
+substring1/2
+substring(+Str1 : string, +Str2 : string)
 
+Comprueba si Str1 es subString de Str2
 */
+substring1(Str1,Str2):-
+	name(Str1,X),
+	name(Str2,S),
+	substring2(X,S).
 substring2(X,S) :-
   append(_,T,S) ,
   append(X,_,T) ,
   X \= []
   .
-
-substring1(Str1,Str2):-
-	name(Str1,X),
-	name(Str2,S),
-	substring2(X,S).
-
-
-
 
 /*
 seParecen/2
@@ -373,7 +360,15 @@ writeMessage(Msg,From,InputLog,OutputLog):-
 
 
 /*
+searchKeyword/4
+searchKeyword(+Msg : string,?Keyword : string,?Forma : number,?Respuesta : number)
 
+Es verdadero si existe el Keyword en el mensaje
+
+@param Msg String con el mensaje
+@param Keyword Palabra clave
+@param Forma Direccion de la conversacion que corresponde la Keyword
+@param Respuesta Numero de la respuesta que corresponde la Keyword
 */
 searchKeyword(Msg,Keyword,Forma,Respuesta):-
 	string_upper(Msg,MsgUpper),
@@ -381,6 +376,17 @@ searchKeyword(Msg,Keyword,Forma,Respuesta):-
 	is_In(Keyword,L),
 	keyword(Keyword,Forma,Respuesta).
 
+
+/*
+searchMovie/3
+searchMovie(+Msg : string, -Pelicula : string, -Genero : string)
+
+Devuelve la pelicula que dijo el usuario
+
+@param Msg Mensaje
+@param Pelicula Nombre de la pelicula
+@param Genero Genero de la pelicula
+*/
 searchMovie(Msg,Pelicula,Genero):-
 	pelicula(Pelicula,Genero,_),
 	string_upper(Pelicula,PeliculaUpper),
@@ -388,16 +394,58 @@ searchMovie(Msg,Pelicula,Genero):-
 	sub_string(MsgUpper,_,_,_,PeliculaUpper),!.
 
 
+
+/*
+maxP/3
+maxP(+Pelicula1 : list,+Pelicula2 : list, -PeliculaMayor : list)
+
+Devuelve la pelicula con mayor puntaje
+
+@param Pelicula1 Lista con el nombre de la pelicula y puntuacion
+@param Pelicula2 Lista con el nombre de la pelicula y puntuacion
+*/
 maxP([A,P1],[_,P2],[A,P1]):-P1>P2.
 maxP([_,P1],[A,P2],[A,P2]):-P1<P2.
 
+/*
+mejorPelicula/2
+mejorPelicula(+Lista : list, -MejorPelicula : list)
 
+Devuelve la mejor pelicula de una lista de peliculas
+
+@param Lista Lista de peliculas donde cada elemento es una lista con el nombre y su puntuacion
+@param MejorPelicula Lista con la mejor pelicula y su puntuacion
+*/
 mejorPelicula([P],P).
 mejorPelicula([P|L],Pf):-
 	mejorPelicula(L,P1),
 	maxP(P,P1,Pf).
 
+/*
+recomendarPelicula/2
+recomendarPelicula(+Genero : string,-MejorPelicula : list)
 
+Devuelve la mejor pelicula del genero dado
+
+@param Genero String con el genero a buscar: ACCION, TERROR,DRAMA,etc
+@param MejorPelicula Lista con el primer elemento el nombre de la mejor pelicula y su puntuacion
+*/
+recomendarPelicula(GENERO,P):-
+lista_de_peliculas_genero(GENERO,L),
+mejorPelicula(L,P),!.
+
+
+
+/*
+mensaje_Bienvenida/3
+mensaje_Bienvenida(+Chatbot : list,+Seed : number, -Msg : string)
+
+Devuelve el mensaje de bienvenida segun la hora del día
+
+@param Chatbot Lista con la personalidad y las evaluaciones
+@param Seed Semilla
+@param Msg Mensaje de bienvenida
+*/
 mensaje_Bienvenida(Chatbot,Seed,Msg):-
 	append([],Chatbot,[Perso,_]),
 	hora(Hor,_),
@@ -405,7 +453,6 @@ mensaje_Bienvenida(Chatbot,Seed,Msg):-
 	Hor<12,
 	findall(Str,mensaje(Perso,0,0,Str),L),
 	randomChoose(L,Seed,Msg),!.
-
 mensaje_Bienvenida(Chatbot,Seed,Msg):-
 	append([],Chatbot,[Perso,_]),
 	hora(Hor,_),
@@ -413,7 +460,6 @@ mensaje_Bienvenida(Chatbot,Seed,Msg):-
 	Hor<20,
 	findall(Str,mensaje(Perso,0,1,Str),L),
 	randomChoose(L,Seed,Msg),!.
-
 mensaje_Bienvenida(Chatbot,Seed,Msg):-
 	append([],Chatbot,[Perso,_]),
 	hora(Hor,_),
@@ -421,120 +467,184 @@ mensaje_Bienvenida(Chatbot,Seed,Msg):-
 	findall(Str,mensaje(Perso,0,2,Str),L),
 	randomChoose(L,Seed,Msg),!.
 
+
+/*
+listaHorariosString/2
+listaHorariosString(+Lista : list, -Str : string)
+
+Devuelve un string con los horarios de una pelicula
+
+@param Lista Listado de horarios de una pelicula en un dia dado
+@param Str String con los horarios ordenados
+*/
 listaHorariosString([],"").
 listaHorariosString([H|T],Str):-
 	listaHorariosString(T,Str1),
 	string_concat(H,Str1,S1),
 	string_concat(" ",S1,Str).
 
+/*
+devolver_horarios/3
+devolver_horarios(+Pelicula : string, +Dia : string , -Str: string)
 
+Devuelve los horarios de una pelicula en forma de string para el dia en especifico
+
+@param Pelicula String con el nombre de la pelicula
+@param Dia Dia de la semana en Mayusculas y sin acentos
+@param Str String de salida
+*/
 devolver_Horarios(Pelicula,"LUNES",S):-
 	horarioP(Pelicula,[L|_]),
 	listaHorariosString(L,S).
-
 devolver_Horarios(Pelicula,"MARTES",S):-
 	horarioP(Pelicula,[_,L|_]),
 	listaHorariosString(L,S).
-
 devolver_Horarios(Pelicula,"MIERCOLES",S):-
 	horarioP(Pelicula,[_,_,L|_]),
 	listaHorariosString(L,S).
-
 devolver_Horarios(Pelicula,"JUEVES",S):-
 	horarioP(Pelicula,[_,_,_,L|_]),
 	listaHorariosString(L,S).
-
 devolver_Horarios(Pelicula,"VIERNES",S):-
 	horarioP(Pelicula,[_,_,_,_,L|_]),
 	listaHorariosString(L,S).
-
 devolver_Horarios(Pelicula,"SABADO",S):-
 	horarioP(Pelicula,[_,_,_,_,_,L|_]),
 	listaHorariosString(L,S).
-
 devolver_Horarios(Pelicula,"DOMINGO",S):-
 	horarioP(Pelicula,[_,_,_,_,_,_,L]),
 	listaHorariosString(L,S).
 
 
+/*
+writeInfo/3
+writeInfo(+Msg : string ,+InputLog : list,-OutputLog : list)
 
+Si el usuario dijo el nombre de una pelicula, el dia o el horario, este se guarda en el log
 
-
-
+@param Msg mensaje
+@param InputLog Log de la conversacion
+@param OutputLog Log modificado
+*/
 writeInfo(Msg,[M,[[_,_,Dia,Horario]|L]],[M,[[Keyword,Pelicula,Dia,Horario]|L]]):-
 	searchKeyword(Msg,Keyword,1,1),
 	genero(Keyword),
 	recomendarPelicula(Keyword,[Pelicula,_]),!.
-
-
-
-
 writeInfo(Msg,[M,[[Genero,Pelicula,_,Horario]|L]],[M,[[Genero,Pelicula,Keyword,Horario]|L]]):-
 	searchKeyword(Msg,Keyword,_,_),
 	dia(Keyword),!.
-
-
 writeInfo(Msg,[M,[[Genero,Pelicula,Dia,_]|L]],[M,[[Genero,Pelicula,Dia,Keyword]|L]]):-
 	searchKeyword(Msg,Keyword,_,_),
 	horario(Keyword),!.
-
 writeInfo(Msg,[M,[[_,_,Dia,Horario]|L]],[M,[[Genero,Pelicula,Dia,Horario]|L]]):-
 	searchMovie(Msg,Pelicula,Genero).
-
 writeInfo(_,L,L).
 
 
 
+/*
+log/1
+log(+Log : list)
 
+Es verdadero si el paramentro Log es un log
 
-
-
-
-
-
-
-
-
+@param Log Log de una conversacion
+*/
 log([Mensajes,Info]):-
 	is_list(Mensajes),
 	is_list(Info).
 
+
+/*
+getLastID/2
+getLastID(+Log : string, -ID : number)
+
+Devuelve el ID de la ultima conversacion del chatbot
+
+@param Log Log del chatbot
+@param ID Numero con el ultimo id
+*/
 getLastID([Mensajes,_],ID):-
 	reverse(Mensajes,MensajesR),
 	getLastID1(MensajesR,ID).
-
-
 getLastID1([],0).
 	getLastID1([H|_],ID):-
 	split_string(H," ","",[_,_,_,_,_,S]),
 	split_string(S,":","",["ID",IDs]),
 	atom_number(IDs,ID),
 	!.
-
 getLastID1([_|T],ID):-
 	getLastID1(T,ID).
 
 
+/*
+genNewID/2
+genNewID(+ID : number,-NewID : number)
+
+Devuelve un nuevo id
+
+@param ID Ultimo id
+@param NewID Nuevo id
+*/
 genNewID(ID,NewID):-
 	NewID is ID+1.
 
 
+/*
+msgFrom/3
+msgFrom(-Msg : string,-Usr : string,+Str : string)
 
+Devuelve el nombre del usuario y el mensaje de un string
+
+@param Msg Mensaje del usuario
+@param Usr Nombre del usuario
+@param Str String
+*/
 msgFrom(Msg,Usr,Str):-
 	split_string(Str," ","",[_,_,_,_,N|MsgL]),
 	split_string(N,":","",[Usr,_]),
 	atomic_list_concat(MsgL," ",Msg),!.
 
+/*
+lastMsgFrom/3
+lastMsgFrom(+Usr : list,+Lista : list, -Msg : list)
 
+Devuelve el ultimo mensaje de Usr de una lista de mensajes
+
+@param Usr Nombre de usuario
+@param Lista Lista de mensajes
+@param Msg Mensaje
+*/
 lastMsgFrom(Usr,[H],Msg):-
 	msgFrom(Msg,Usr,H).
-
 lastMsgFrom(Usuario,[_|T],Msg):-
 	lastMsgFrom(Usuario,T,Msg).
 
+/*
+genNewUsr/1
+genNewUsr(-NewUsr : list)
 
+Devuelve un usuario nuevo
+
+@param NewUsr Lista del nuevo usuario
+*/
 genNewUser(["","","",""]).
 
+
+/*
+replaceBrackets/3
+replaceBrackets(+InputStr : string, +Lista : list,+OutputStr: string)
+
+Reemplaza los {} de un string segun los elementos de una lista
+
+@param InputStr String con {} 
+@param Lista Lista de strings
+@param OutputStr String de salida
+*/
+replaceBrackets(InputStr,Lista,OutputStr):-
+	split_string(InputStr,"{}","",List1),
+	replaceBrackets2(List1,Lista,List2),
+	list_string(List2,OutputStr),!.
 replaceBrackets2(L,[],L):-!.
 replaceBrackets2([""|L],[H|T],Salida):-
 	append([H],L1,Salida),
@@ -543,22 +653,26 @@ replaceBrackets2([H|L],T,Salida):-
 	append([H],L1,Salida),
 	replaceBrackets2(L,T,L1).
 
-replaceBrackets(InputStr,Lista,OutputStr):-
-	split_string(InputStr,"{}","",List1),
-	replaceBrackets2(List1,Lista,List2),
-	list_string(List2,OutputStr),!.
 
 
+/*
+genRespuesta/5
+genRespuesta(+Msg : string,+Chatbot : list, +Log : list, +Seed: number, -R : string)
 
+Genera la respuesta del chatbot a partir del mensaje del usuario
+
+@param Msg Mensaje del usuario
+@param Chatbot Lista chatbot
+@param Log Log del chatbot
+@param Seed Semilla
+@param R Respuesta del chatbot
+*/
 genRespuesta(Msg,Chatbot,[Mensajes,_],Seed,R):-
 	lastMsgFrom("Chatbot",Mensajes,RespuestaChatbot),
 	checkLastMsg(RespuestaChatbot,Chatbot,0,_),
 	searchKeyword(Msg,_,1,0),
 	possibleResponses(Msg,Chatbot,[Mensajes|_],Lista_respuestas),
 	randomChoose(Lista_respuestas,Seed,R).
-
-
-
 genRespuesta(Msg,Chatbot,[Mensajes,[[Genero,_,_,_]|_]],Seed,R):-
 	lastMsgFrom("Chatbot",Mensajes,RespuestaChatbot),
 	checkLastMsg(RespuestaChatbot,Chatbot,1,0),
@@ -570,38 +684,26 @@ genRespuesta(Msg,Chatbot,[Mensajes,[[Genero,_,_,_]|_]],Seed,R):-
 	recomendarPelicula(Genero,[Pel,Puntuacion]),
 	atom_string(Puntuacion,StrPuntuacion),
 	replaceBrackets(Respuesta,[Pel,StrPuntuacion],R).
-
-
-
-
-
-
 genRespuesta(Msg,Chatbot,[Mensajes|_],Seed,R):-
 	lastMsgFrom("Chatbot",Mensajes,RespuestaChatbot),
 	checkLastMsg(RespuestaChatbot,Chatbot,0,_),
 	searchKeyword(Msg,_,2,0),
 	possibleResponses(Msg,Chatbot,[Mensajes|_],Lista_respuestas),
 	randomChoose(Lista_respuestas,Seed,R).
-
 genRespuesta(Msg,Chatbot,[Mensajes|_],Seed,R):-
 	lastMsgFrom("Chatbot",Mensajes,RespuestaChatbot),
 	checkLastMsg(RespuestaChatbot,Chatbot,2,0),
 	searchKeyword(Msg,_,2,1),
 	possibleResponses(Msg,Chatbot,[Mensajes|_],Lista_respuestas),
 	randomChoose(Lista_respuestas,Seed,R).
-
 genRespuesta(Msg,Chatbot,[Mensajes,[[_,Pelicula,Dia,_]|_]],Seed,R):-
 	lastMsgFrom("Chatbot",Mensajes,RespuestaChatbot),
 	checkLastMsg(RespuestaChatbot,Chatbot,2,1),
-	searchKeyword(Msg,_,2,2),
+	searchMovie(Msg,_,_),
 	possibleResponses(Msg,Chatbot,[Mensajes|_],Lista_respuestas),
 	randomChoose(Lista_respuestas,Seed,Respuesta),
 	devolver_Horarios(Pelicula,Dia,Horarios),
 	replaceBrackets(Respuesta,[Dia,Horarios],R).
-
-
-
-
 
 genRespuesta(Msg,Chatbot,[Mensajes|_],Seed,R):-
 	lastMsgFrom("Chatbot",Mensajes,RespuestaChatbot),
@@ -609,14 +711,12 @@ genRespuesta(Msg,Chatbot,[Mensajes|_],Seed,R):-
 	searchKeyword(Msg,_,3,0),
 	possibleResponses(Msg,Chatbot,[Mensajes|_],Lista_respuestas),
 	randomChoose(Lista_respuestas,Seed,R).
-
 genRespuesta(Msg,Chatbot,[Mensajes|_],Seed,R):-
 	lastMsgFrom("Chatbot",Mensajes,RespuestaChatbot),
 	checkLastMsg(RespuestaChatbot,Chatbot,3,0),
 	searchKeyword(Msg,_,3,1),
 	possibleResponses(Msg,Chatbot,[Mensajes|_],Lista_respuestas),
 	randomChoose(Lista_respuestas,Seed,R).
-
 genRespuesta(Msg,Chatbot,[Mensajes,[[_,Pelicula,Dia,_]|_]],Seed,R):-
 	lastMsgFrom("Chatbot",Mensajes,RespuestaChatbot),
 	checkLastMsg(RespuestaChatbot,Chatbot,3,1),
@@ -625,7 +725,6 @@ genRespuesta(Msg,Chatbot,[Mensajes,[[_,Pelicula,Dia,_]|_]],Seed,R):-
 	randomChoose(Lista_respuestas,Seed,Respuesta),
 	devolver_Horarios(Pelicula,Dia,Horarios),
 	replaceBrackets(Respuesta,[Dia,Horarios],R).
-
 genRespuesta(Msg,Chatbot,[Mensajes,[[_,_,Dia,Horario]|_]],Seed,R):-
 	lastMsgFrom("Chatbot",Mensajes,RespuestaChatbot),
 	checkLastMsg(RespuestaChatbot,Chatbot,3,2),
@@ -636,11 +735,17 @@ genRespuesta(Msg,Chatbot,[Mensajes,[[_,_,Dia,Horario]|_]],Seed,R):-
 
 
 
+/*
+possibleResponses/4
+possibleResponses(+Msg : list,+Chatbot : list, +Log : list,-L : list)
 
+Devuelve una lista de posibles respuestas a partir de un mensaje
 
-
-
-
+@param Msg Mensaje del usuario
+@param Chatbot Lista chatbot
+@param Log Log del chatbot
+@param L Lista de respuestas del chatbot
+*/
 possibleResponses(Msg,[Personalidad|_],[Mensajes|_],L):-
 	lastMsgFrom("Chatbot",Mensajes,Respuesta),
 	checkLastMsg(Respuesta,[Personalidad|_],Forma,Resp),
@@ -664,7 +769,7 @@ possibleResponses(Msg,[Personalidad|_],[Mensajes|_],L):-
 possibleResponses(Msg,[Personalidad|_],[Mensajes|_],L):-
 	lastMsgFrom("Chatbot",Mensajes,Respuesta),
 	checkLastMsg(Respuesta,[Personalidad|_],2,1),
-	searchKeyword(Msg,_,2,2),
+	searchMovie(Msg,_,_),
 	findall(X,mensaje(Personalidad,2,2,X),L).
 possibleResponses(Msg,[Personalidad|_],[Mensajes|_],L):-
 	lastMsgFrom("Chatbot",Mensajes,Respuesta),
@@ -697,18 +802,54 @@ possibleResponses(Msg,[Personalidad|_],[Mensajes|_],L):-
 	searchKeyword(Msg,_,1,2),
 	findall(X,mensaje(Personalidad,1,2,X),L).
 
+/*
+sendMessage/5
+sendMessage(+Msg : string,+Chatbot : list, +InputLog : list,+Seed : number,-OutputLog : list)
 
+Envia el mensaje del usuario y devuelve un log con el mensaje del usuario y la respuesta del chatbot
+
+@param Chatbot Lista chatbot
+@param Msg String con el mensaje del usuario
+@param InputLog Log de entrada
+@param Seed Semilla
+@param OutputLog Log de salida
+*/
 sendMessage(Msg,Chatbot,InputLog,Seed,OutputLog):-
 	writeInfo(Msg,InputLog,OutputLog1),
 	genRespuesta(Msg,Chatbot,OutputLog1,Seed,Respuesta),
 	writeMessage(Msg,"Usuario",OutputLog1,OutputLog2),
 	writeMessage(Respuesta,"Chatbot",OutputLog2,OutputLog),!.
 
+
+/*
+endDialog/4
+endDialog(+Chatbot : list, +InputLog : list,+Seed : number,-OutputLog : list)
+
+Finaliza la conversacion del chatbot con un usuario
+
+@param Chatbot Lista chatbot
+@param InputLog Log de entrada
+@param Seed Semilla
+@param OutputLog Log de salida
+*/
 endDialog(Chatbot,InputLog,Seed,OutputLog):-
 	fechaString(F),
 	list_string(["EndDialog",F],S),
 	writeStr(S,InputLog,OutputLog).
 
+
+
+/*
+beginDialog/4
+beginDialog(+Chatbot : list, +InputLog : list,+Seed : number,-OutputLog : list)
+
+Inicia la conversacion del chatbot con un usuario
+
+@param Chatbot Lista chatbot
+@param InputLog Log de entrada
+@param Seed Semilla
+@param OutputLog Log de salida
+*/
 beginDialog(Chatbot,InputLog,Seed,OutputLog):-
 	append([],InputLog,[Mensajes,Info]),
 	genNewUser(Usr),
@@ -725,12 +866,22 @@ beginDialog(Chatbot,InputLog,Seed,OutputLog):-
 	writeMessage(Msg,"Chatbot",Log1,OutputLog).
 
 
-recomendarPelicula(GENERO,P):-
-lista_de_peliculas_genero(GENERO,L),
-mejorPelicula(L,P),!.
+/*
+test/5
+test(+User : list,+Chatbot : list, +InputLog : list,+Seed : number,-OutputLog : list)
 
+Permite simular una conversacion a partir de una lista de mensajes
 
-
-
-
-
+@param User Lista de mensajes
+@param Chatbot Lista chatbot
+@param InputLog Log de entrada
+@param Seed Semilla
+@param OutputLog Log de salida
+*/
+test(User,Chatbot,InputLog,Seed,OutputLog):-
+	beginDialog(Chatbot,InputLog,Seed,OutputLog1),
+	test2(User,Chatbot,OutputLog1,Seed,OutputLog).
+test2([],_,A,_,A).
+test2([H|T],Chatbot,InputLog,Seed,OutputLog):-
+	sendMessage(H,Chatbot,InputLog,Seed,OutputLog1),
+	test2(T,Chatbot,OutputLog1,Seed,OutputLog).
